@@ -21,6 +21,12 @@ A running log of things we've noticed but haven't fixed yet — separate from Gi
 **Impact:** None yet — the repo isn't public. But real AGPL-3.0 text needs a real name, not a placeholder, before this repo is ever made public.
 **Planned fix:** fill in `[YOUR NAME HERE...]` in `LICENSE` with your actual name (or a pseudonym you're comfortable being publicly associated with the project) — a two-minute edit, just needs a deliberate choice rather than a default.
 
+### CI warns about Node 20 deprecation in the Actions runtime
+**Since:** first green CI run, M0 (2026-09-01)
+**Impact:** None currently — the build passed. This is GitHub warning that `actions/checkout@v4`, `actions/setup-node@v4`, and `pnpm/action-setup@v4` were built targeting Node 20 as their own internal execution runtime (not the Node version our workflow builds Putter with, which is already pinned to 22), and GitHub is transparently forcing them onto Node 24 in the meantime.
+**Why it's not fixed yet:** there's nothing to fix on our side — this is the action maintainers' responsibility, and pinning to `@v4` (a major-version tag) means we'll pick up their runtime updates automatically without us touching the workflow file.
+**Planned fix:** none needed unless the warning turns into an actual failure later, which would mean re-pinning to a newer action version at that point.
+
 ## Resolved
 
 *(Nothing resolved yet — this project is 3 commits old. Future fixes get moved here with the date and commit that fixed them.)*
