@@ -28,8 +28,10 @@ export default tseslint.config(
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       // Underscore-prefixed args mark intentionally-unused parameters — used
       // by the reserved sync-hook stubs in dexie-repository.ts, and expected
-      // to recur as more stub/interface methods get written.
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      // to recur as more stub/interface methods get written. Same convention
+      // extended to destructured vars for the immutable-field-stripping
+      // pattern in update() (M0 team review fix).
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
 );

@@ -14,6 +14,14 @@ export interface Repository<T extends BaseEntity> {
   delete(id: string): Promise<void>;
   getById(id: string): Promise<T | undefined>;
   getAll(): Promise<T[]>;
+  /**
+   * Query by a single indexed field (e.g. a tool's own status/date field),
+   * so tools don't have to reach past this abstraction into the raw Dexie
+   * Table for anything beyond trivial CRUD. Added after the M0 team review
+   * flagged getAll()-plus-JS-filter as the only filtering primitive on offer
+   * — see Putter-Team-Reviews.md, Review 1, SW Engineer finding #1.
+   */
+  getWhere(field: keyof T & string, value: unknown): Promise<T[]>;
 
   /** Reserved for a future sync connector. Not implemented yet, not called by anything today. */
   pushChanges(since: string): Promise<T[]>;

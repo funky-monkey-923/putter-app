@@ -1,4 +1,0 @@
-0000000000000000000000000000000000000000 d5cc4cfd08f3f0a6d58d8da3bf5b92d3e849ec6e Putter Dev <you@example.com> 1788295780 -0400	commit (initial): M0 slice 1: pnpm workspace skeleton, blank Vite+React+TS app, placeholder core package
-d5cc4cfd08f3f0a6d58d8da3bf5b92d3e849ec6e 9e02f84383b4209dc6493f3168a91c05002c58a4 Putter Dev <you@example.com> 1788295812 -0400	commit: chore: ignore stray npm lockfile in .gitignore
-9e02f84383b4209dc6493f3168a91c05002c58a4 122979634432f979693b7ef1ef3011e3b553c867 Putter Dev <you@example.com> 1788302864 -0400	commit: M0 slice 2: core package (entity types, event bus, Dexie repository w/ sync stubs), PWA config, storage persistence handling
-122979634432f979693b7ef1ef3011e3b553c867 035f4126948b9016a4a4760b113ae6cfa7218f66 Putter Dev <you@example.com> 1788303965 -0400	commit: M0 slice 3: manifest registry, Quiet Morning theme tokens via Tailwind, Vitest tests for core, ESLint, CI workflow

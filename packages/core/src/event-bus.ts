@@ -28,7 +28,16 @@ export class EventBus {
   }
 
   emit<T>(eventName: string, payload: T): void {
-    this.listeners.get(eventName)?.forEach((listener) => listener(payload));
+    // Each listener is isolated so one throwing listener can't block
+    // delivery to the rest — flagged in the M0 team review (see
+    // Putter-Team-Reviews.md, Review 1, SW Engineer finding #5).
+    this.listeners.get(eventName)?.forEach((listener) => {
+      try {
+        listener(payload);
+      } catch (err) {
+        console.error(`EventBus: listener for "${eventName}" threw`, err);
+      }
+    });
   }
 }
 

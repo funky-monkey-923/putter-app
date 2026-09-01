@@ -96,4 +96,47 @@ describe('DexieRepository', () => {
     await expect(repo.pushChanges('2026-01-01')).rejects.toThrow(/sync connector/);
     await expect(repo.pullChanges([])).rejects.toThrow(/sync connector/);
   });
+
+  it('create() rejects an id collision instead of silently overwriting', async () => {
+    const note = makeNote({ id: 'fixed-id', title: 'First' });
+    await repo.create(note);
+
+    await expect(repo.create(makeNote({ id: 'fixed-id', title: 'Second' }))).rejects.toThrow();
+  });
+
+  it("update() cannot be used to overwrite id, type, or createdAt", async () => {
+    const note = makeNote({ title: 'Original' });
+    await repo.create(note);
+
+    const updated = await repo.update(note.id, {
+      title: 'Renamed',
+      id: 'someone-elses-id',
+      type: 'not-a-note',
+      createdAt: '1999-01-01T00:00:00.000Z',
+    } as Partial<TestNote>);
+
+    expect(updated.id).toBe(note.id);
+    expect(updated.type).toBe('note');
+    expect(updated.createdAt).toBe(note.createdAt);
+    expect(updated.title).toBe('Renamed');
+  });
+
+  it('getWhere() filters by an indexed field and excludes soft-deleted records', async () => {
+    const sharedTimestamp = '2026-01-01T00:00:00.000Z';
+    await repo.create(makeNote({ title: 'A', body: 'draft', updatedAt: sharedTimestamp }));
+    await repo.create(makeNote({ title: 'B', body: 'draft', updatedAt: sharedTimestamp }));
+    const removed = makeNote({ title: 'C', body: 'draft', updatedAt: sharedTimestamp });
+    await repo.create(removed);
+    await repo.delete(removed.id); // delete() bumps deletedAt, not updatedAt
+
+    // 'updatedAt' is an indexed field on the test schema; querying an
+    // unindexed field would throw in real Dexie, which is intentional —
+    // getWhere() is meant for indexed lookups, not full scans.
+    const matches = await repo.getWhere('updatedAt', sharedTimestamp);
+
+    expect(matches).toHaveLength(2);
+    expect(matches.every((n) => n.deletedAt === null)).toBe(true);
+    expect(matches.find((n) => n.id === removed.id)).toBeUndefined();
+  });
 });
+

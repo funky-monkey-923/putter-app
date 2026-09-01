@@ -4,6 +4,13 @@ on:
   push:
   pull_request:
 
+# Least-privilege default — this workflow only reads the repo, it never
+# needs to write. Flagged in the M0 team review (Putter-Team-Reviews.md,
+# Review 1, DevSecOps finding) since the default GITHUB_TOKEN scope without
+# this block is broader than the job actually needs.
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest

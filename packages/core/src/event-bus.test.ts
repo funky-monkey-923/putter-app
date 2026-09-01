@@ -41,4 +41,22 @@ describe('EventBus', () => {
     const bus = new EventBus();
     expect(() => bus.emit('nobody:listening:v1', {})).not.toThrow();
   });
+
+  it('isolates a throwing listener so other listeners still get called', () => {
+    const bus = new EventBus();
+    const throwing = vi.fn(() => {
+      throw new Error('boom');
+    });
+    const healthy = vi.fn();
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    bus.on('some:event:v1', throwing);
+    bus.on('some:event:v1', healthy);
+
+    expect(() => bus.emit('some:event:v1', { value: 1 })).not.toThrow();
+
+    expect(throwing).toHaveBeenCalledTimes(1);
+    expect(healthy).toHaveBeenCalledWith({ value: 1 });
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
+  });
 });

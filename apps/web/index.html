@@ -3,6 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Minimal CSP enforcing the "no third-party network calls" privacy
+      promise at the browser level, not just as a stated intent. Flagged as
+      a real (not premature) gap in the M0 team review — see
+      Putter-Team-Reviews.md, Review 1, DevSecOps finding.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self';"
+    />
     <title>Putter</title>
   </head>
   <body>
