@@ -1,19 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
         name: 'Putter',
         short_name: 'Putter',
         description: 'A calm, all-in-one home for your daily life.',
-        // Placeholder colors — real Quiet Morning theme tokens land in M0 slice 3.
-        theme_color: '#f5f1ea',
-        background_color: '#f5f1ea',
+        theme_color: '#F3EFE8',
+        background_color: '#F3EFE8',
         display: 'standalone',
         start_url: '/',
         icons: [],

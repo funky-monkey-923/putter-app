@@ -1,0 +1,37 @@
+import type { ComponentType } from 'react';
+
+/**
+ * Every tool package exports one of these instead of the app shell having
+ * tool-specific rendering logic — the shell iterates a registry of these
+ * (Product Plan §8a). TodayWidget/CommandWidget are both optional: a tool
+ * can ship Zen-only (no CommandWidget) and grow a Command-mode view later
+ * without a rewrite, which is exactly what the v1 descope relies on.
+ */
+export type ToolCategory = 'rhythm' | 'reflect' | 'plan' | 'home';
+
+export interface ToolManifest {
+  id: string;
+  displayName: string;
+  category: ToolCategory;
+  TodayWidget?: ComponentType;
+  CommandWidget?: ComponentType;
+}
+
+export class ManifestRegistry {
+  private manifests = new Map<string, ToolManifest>();
+
+  register(manifest: ToolManifest): void {
+    this.manifests.set(manifest.id, manifest);
+  }
+
+  getAll(): ToolManifest[] {
+    return Array.from(this.manifests.values());
+  }
+
+  get(id: string): ToolManifest | undefined {
+    return this.manifests.get(id);
+  }
+}
+
+/** The one shared registry instance the app shell renders from. */
+export const toolRegistry = new ManifestRegistry();

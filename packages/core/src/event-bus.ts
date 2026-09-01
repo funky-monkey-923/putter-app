@@ -8,14 +8,21 @@
 type Listener<T> = (payload: T) => void;
 
 export class EventBus {
+  // The internal store necessarily erases each listener's specific payload
+  // type, since one bus holds listeners for many differently-shaped events —
+  // type safety is enforced at the public on<T>/emit<T> boundary instead,
+  // which is the standard shape for a typed event emitter's internals.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private listeners = new Map<string, Set<Listener<any>>>();
 
   on<T>(eventName: string, listener: Listener<T>): () => void {
     if (!this.listeners.has(eventName)) {
       this.listeners.set(eventName, new Set());
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.listeners.get(eventName)!.add(listener as Listener<any>);
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.listeners.get(eventName)?.delete(listener as Listener<any>);
     };
   }

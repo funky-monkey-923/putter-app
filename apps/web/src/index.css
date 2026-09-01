@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/*
+ * Quiet Morning theme tokens — the exact values from Putter-Design-Direction.md,
+ * not invented here. Only theme + mode shipping at v1 launch (see the v1
+ * descope in Putter-Product-Plan.md); Command mode and the other 7 themes
+ * add more token blocks later without restructuring this one.
+ */
+@theme {
+  --color-bg: #F3EFE8;
+  --color-ink: #2A2E35;
+  --color-ink-soft: #5B6169;
+  --color-card: #FBF9F5;
+  --color-sage: #7E9B7E;
+  --color-clay: #C97D5D;
+  --color-lavender: #A79BB8;
+  --color-taupe: #DCD3C6;
+
+  /*
+   * Font names reference the real Design Direction typography (Quicksand /
+   * Nunito Sans / Space Mono). Actual self-hosted font FILES aren't bundled
+   * yet — that's a known follow-up, not silently skipped — so these
+   * currently fall back to the system rounded/mono stacks, same as the
+   * mockups did. Self-hosting (not a Google Fonts CDN call) is required by
+   * the no-third-party-requests privacy promise once real files are added.
+   */
+  --font-display: "Quicksand", ui-rounded, "Segoe UI", sans-serif;
+  --font-body: "Nunito Sans", ui-rounded, "Segoe UI", sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+}
