@@ -1,2 +1,5 @@
-// Placeholder — entity types, event bus, and repository base class land in M0 slice 2.
-export const version = '0.0.0-m0-skeleton'
+export * from './entity';
+export * from './event-bus';
+export * from './repository';
+export * from './dexie-repository';
+export * from './db';

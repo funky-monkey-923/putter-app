@@ -8,6 +8,9 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "dexie": "^4.0.8"
+  },
   "devDependencies": {
     "typescript": "^5.5.4"
   }
