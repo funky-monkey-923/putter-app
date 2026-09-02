@@ -9,3 +9,9 @@ package-lock.json
 .git-old-*/
 .claude/settings.local.json
 
+# Local hand-off folder for binary assets the sandbox can't fetch itself
+# (fonts, icons, etc.) — ephemeral, not part of the tracked repo. See
+# build_workflow_preferences memory / Putter-Mentorship-Journal for why this
+# exists. Accidentally got committed once (fonts commit); untracked below.
+others/
+

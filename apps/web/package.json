@@ -13,6 +13,7 @@
     "@putter/core": "workspace:*",
     "@putter/tool-tasks": "workspace:*",
     "@putter/tool-focus": "workspace:*",
+    "@putter/tool-habits": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "workbox-window": "^7.1.0"
