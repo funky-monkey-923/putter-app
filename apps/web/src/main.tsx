@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { registerSW } from 'virtual:pwa-register'
-import { registerTasksTool } from '@putter/tool-tasks'
+import { registerTasksTool, subscribeTasksToFocusEvents } from '@putter/tool-tasks'
+import { registerFocusTool } from '@putter/tool-focus'
 import App from './App'
 import { ensurePersistentStorage } from './storage'
 import './index.css'
@@ -13,6 +14,12 @@ registerSW({ immediate: true })
 // time <TodayView>/<App> render. M1 adds the first real tool; M2-M4 each
 // add one more line here.
 registerTasksTool()
+registerFocusTool()
+// Task Manager's cross-tool reaction to Focus Timer's completion event —
+// wired here, not inside registerTasksTool(), to keep "register my
+// manifest" and "subscribe to another tool's events" as two distinct,
+// separately-callable steps.
+subscribeTasksToFocusEvents()
 
 ensurePersistentStorage().then((persisted) => {
   if (!persisted) {

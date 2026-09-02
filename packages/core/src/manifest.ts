@@ -22,6 +22,17 @@ export interface ToolManifest {
    * later" reason — a tool could theoretically be Today-widget-only.
    */
   FullView?: ComponentType;
+  /**
+   * Lets another tool offer "link to an item in this tool" (e.g. Focus
+   * Timer linking a session to a task) without importing that tool's
+   * package directly — the caller only knows the target tool's string
+   * `id` (looked up via `toolRegistry.get(id)`), same loose-coupling
+   * convention as everything else in the manifest pattern. Added for M2.
+   * Optional: a tool with nothing linkable (or nothing built yet) simply
+   * omits it, and callers must treat that as "no picker available," not
+   * an error.
+   */
+  getLinkables?: () => Promise<Array<{ id: string; title: string }>>;
 }
 
 export class ManifestRegistry {

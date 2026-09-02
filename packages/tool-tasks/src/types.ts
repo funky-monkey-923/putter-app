@@ -27,6 +27,13 @@ export interface Task extends BaseEntity {
   /** null means this task doesn't recur — a normal one-off task. */
   recurrence: RecurrenceRule | null;
   completedAt: string | null;
+  /**
+   * Total minutes logged against this task via linked Focus Timer
+   * sessions (M2) — incremented by `logTime()`, never set directly.
+   * Deliberately just a running total, not a log of individual sessions;
+   * Focus Timer's own session history is the place to see the breakdown.
+   */
+  loggedMinutes: number;
 }
 
 /**

@@ -107,6 +107,30 @@ describe('TaskRepository', () => {
     await tasks.create(task);
     await expect(tasks.create({ ...task, title: 'Second' })).rejects.toThrow();
   });
+
+  it('logTime() adds to a task\'s running loggedMinutes total rather than replacing it', async () => {
+    const task = makeTask({ title: 'Deep work' });
+    await tasks.create(task);
+    expect((await tasks.getById(task.id))?.loggedMinutes).toBe(0);
+
+    await tasks.logTime(task.id, 25);
+    await tasks.logTime(task.id, 15);
+
+    const updated = await tasks.getById(task.id);
+    expect(updated?.loggedMinutes).toBe(40);
+  });
+
+  it('getLinkableTasks() returns only open tasks, as the plain {id, title} shape getLinkables expects', async () => {
+    const open = makeTask({ title: 'Still open' });
+    const done = makeTask({ title: 'Already done' });
+    await tasks.create(open);
+    await tasks.create(done);
+    await tasks.completeTask(done.id);
+
+    const linkable = await tasks.getLinkableTasks();
+
+    expect(linkable).toEqual([{ id: open.id, title: 'Still open' }]);
+  });
 });
 
 describe('ProjectRepository', () => {

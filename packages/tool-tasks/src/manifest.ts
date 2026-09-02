@@ -2,6 +2,7 @@ import { toolRegistry } from '@putter/core';
 import type { ToolManifest } from '@putter/core';
 import TaskManagerToday from './TaskManagerToday';
 import TaskManagerView from './TaskManagerView';
+import { TaskRepository } from './task-repository';
 import './db'; // ensures the schema is registered even if nothing else imports it first
 
 export const tasksManifest: ToolManifest = {
@@ -10,6 +11,9 @@ export const tasksManifest: ToolManifest = {
   category: 'plan',
   TodayWidget: TaskManagerToday,
   FullView: TaskManagerView,
+  // Lets Focus Timer (M2) offer a task picker without importing this
+  // package — see packages/core/src/manifest.ts's doc comment on getLinkables.
+  getLinkables: () => new TaskRepository().getLinkableTasks(),
 };
 
 /**

@@ -7,6 +7,36 @@
  */
 type Listener<T> = (payload: T) => void;
 
+/**
+ * The catalog of every event that actually crosses a tool-package
+ * boundary, with its real payload shape — the retrofit promised in
+ * KNOWN-ISSUES.md back at M0 ("once Focus Timer emits and Task Manager
+ * listens, retrofit a typed EventMap from that real pair"). This is that
+ * pair: M2 (Focus Timer) is the first tool to emit an event something else
+ * actually listens for.
+ *
+ * Deliberately centralized here in core, as one growing catalog, rather
+ * than each tool augmenting it via `declare module` — with only a couple
+ * of cross-tool events so far, one file that shows the whole event
+ * contract is easier to read than declarations scattered across packages.
+ * Revisit that choice (per-tool module augmentation instead) if this file
+ * ever gets unwieldy — e.g. once 4-5 tools are each emitting several
+ * events of their own.
+ *
+ * `on`/`emit` below are typed against this map when the event name is one
+ * they recognize, and fall back to an untyped generic for anything not
+ * yet cataloged — so adding a new tool's events here is additive, never a
+ * breaking change to existing callers.
+ */
+export interface EventMap {
+  'focus:session:completed:v1': {
+    /** null if the session wasn't linked to a task. */
+    taskId: string | null;
+    durationMinutes: number;
+    completedAt: string;
+  };
+}
+
 export class EventBus {
   // The internal store necessarily erases each listener's specific payload
   // type, since one bus holds listeners for many differently-shaped events —
@@ -15,19 +45,21 @@ export class EventBus {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private listeners = new Map<string, Set<Listener<any>>>();
 
-  on<T>(eventName: string, listener: Listener<T>): () => void {
+  on<K extends keyof EventMap>(eventName: K, listener: Listener<EventMap[K]>): () => void;
+  on<T>(eventName: string, listener: Listener<T>): () => void;
+  on(eventName: string, listener: Listener<unknown>): () => void {
     if (!this.listeners.has(eventName)) {
       this.listeners.set(eventName, new Set());
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.listeners.get(eventName)!.add(listener as Listener<any>);
+    this.listeners.get(eventName)!.add(listener);
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.listeners.get(eventName)?.delete(listener as Listener<any>);
+      this.listeners.get(eventName)?.delete(listener);
     };
   }
 
-  emit<T>(eventName: string, payload: T): void {
+  emit<K extends keyof EventMap>(eventName: K, payload: EventMap[K]): void;
+  emit<T>(eventName: string, payload: T): void;
+  emit(eventName: string, payload: unknown): void {
     // Each listener is isolated so one throwing listener can't block
     // delivery to the rest — flagged in the M0 team review (see
     // Putter-Team-Reviews.md, Review 1, SW Engineer finding #5).

@@ -218,6 +218,11 @@ function TaskRow({
         {task.dueDate && <span className="text-xs font-mono text-ink-soft">due {task.dueDate}</span>}
         {projectLabel && <span className="text-xs font-mono text-lavender">{projectLabel}</span>}
         <span className="text-xs font-mono text-clay">{task.priority}</span>
+        {task.loggedMinutes > 0 && (
+          <span className="text-xs font-mono text-ink-soft" title="Time logged via Focus Timer sessions">
+            ⏱ {task.loggedMinutes}m
+          </span>
+        )}
         <button onClick={onDelete} className="ml-auto text-xs text-ink-soft underline">
           Delete
         </button>

@@ -7,3 +7,5 @@ coverage
 .vite
 package-lock.json
 .git-old-*/
+.claude/settings.local.json
+

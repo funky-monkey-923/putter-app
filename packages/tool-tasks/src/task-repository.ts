@@ -80,4 +80,23 @@ export class TaskRepository extends DexieRepository<Task> {
     const all = await this.getAll();
     return all.filter((t) => t.status === 'todo' && t.dueDate !== null && t.dueDate <= todayIso);
   }
+
+  /**
+   * Adds minutes to a task's running logged-time total — called by
+   * focus-integration.ts's event listener when a linked Focus Timer
+   * session completes (M2). Never called directly from the UI.
+   */
+  async logTime(taskId: string, minutes: number): Promise<Task> {
+    const task = await this.getById(taskId);
+    if (!task) {
+      throw new Error(`TaskRepository.logTime: task ${taskId} not found`);
+    }
+    return this.update(taskId, { loggedMinutes: task.loggedMinutes + minutes });
+  }
+
+  /** Open (not-done) tasks, as the plain {id, title} shape the manifest's getLinkables contract expects. */
+  async getLinkableTasks(): Promise<Array<{ id: string; title: string }>> {
+    const all = await this.getAll();
+    return all.filter((t) => t.status === 'todo').map((t) => ({ id: t.id, title: t.title }));
+  }
 }

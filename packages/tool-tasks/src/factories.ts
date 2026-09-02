@@ -26,6 +26,7 @@ export function makeTask(input: {
     subtasks: [],
     recurrence: input.recurrence ?? null,
     completedAt: null,
+    loggedMinutes: 0,
   };
 }
 
