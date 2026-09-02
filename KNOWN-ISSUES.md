@@ -4,12 +4,6 @@ A running log of things we've noticed but haven't fixed yet — separate from Gi
 
 ## Open
 
-### Fonts fall back to system fonts instead of the real Quiet Morning typefaces
-**Since:** M0 slice 3 (2026-09-01)
-**Impact:** Low — the app is fully usable, just not visually final. Quicksand/Nunito Sans/Space Mono are referenced by name in the Tailwind theme, but the actual font files aren't bundled yet, so browsers fall back to system rounded/mono fonts.
-**Why it's not fixed yet:** self-hosting the real fonts (not a Google Fonts CDN call — required by the no-third-party-requests privacy promise) is real but small work, deliberately deferred past M0's structural goals.
-**Planned fix:** before public launch, or whenever it starts bothering us sooner — download the font files, add them to `apps/web/public/fonts/`, wire up `@font-face` rules.
-
 ### PWA manifest ships with zero icons
 **Since:** M0 slice 2 (2026-09-01)
 **Impact:** Low — the app installs fine, but browsers may show a generic icon or a console warning about the manifest's empty `icons` array.
@@ -35,4 +29,6 @@ A running log of things we've noticed but haven't fixed yet — separate from Gi
 
 ## Resolved
 
-*(Nothing resolved yet — this project is 3 commits old. Future fixes get moved here with the date and commit that fixed them.)*
+- ~~Fonts fall back to system fonts instead of the real Quiet Morning typefaces~~ — **Resolved 2026-09-01.** You downloaded the real Quicksand/Nunito Sans/Space Mono files (Google Fonts' own OFL-licensed downloads) and provided them directly; I converted them from `.ttf` to `.woff2` and wired up real `@font-face` rules in `apps/web/src/index.css`, self-hosted from `apps/web/public/fonts/` (no third-party CDN call, per the privacy promise). Quicksand and Nunito Sans use their real variable-font files (`font-weight: 100 1000` covers the whole range from one file); Space Mono ships all four static styles it has upstream (no variable axis exists for it). Also added `woff2` to the PWA's precache glob pattern so the fonts are actually available offline, not just fast on a repeat online visit. License files preserved at `apps/web/public/fonts/licenses/`.
+
+*(Everything else above this line is still open. Future fixes get moved here with the date and commit that fixed them.)*

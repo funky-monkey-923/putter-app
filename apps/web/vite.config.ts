@@ -20,7 +20,11 @@ export default defineConfig({
         icons: [],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+        // woff2 added when the real self-hosted fonts landed — without it,
+        // the fonts wouldn't be part of the offline precache, which would
+        // quietly undercut the "works fully offline" PWA promise on a
+        // repeat visit with no network.
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
       },
     }),
   ],
