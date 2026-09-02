@@ -4,3 +4,4 @@ export * from './repository';
 export * from './dexie-repository';
 export * from './db';
 export * from './manifest';
+export * from './recurrence';

@@ -15,6 +15,13 @@ export interface ToolManifest {
   category: ToolCategory;
   TodayWidget?: ComponentType;
   CommandWidget?: ComponentType;
+  /**
+   * The tool's main/full page — what the nav takes you to. Added for M1
+   * (Task Manager needs a real place to live beyond a Today-view summary
+   * widget). Optional, like the other views, for the same "grow into it
+   * later" reason — a tool could theoretically be Today-widget-only.
+   */
+  FullView?: ComponentType;
 }
 
 export class ManifestRegistry {
